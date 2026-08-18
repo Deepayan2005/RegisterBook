@@ -1,1 +1,1 @@
-Hello from Java!
+{"person":[{"amount":120,"name":"Expense 1"},{"amount":240,"name":"Expense 2"},{"amount":360,"name":"Expense 3"},{"amount":480,"name":"Expense 4"},{"amount":600,"name":"Expense 5"}]}
