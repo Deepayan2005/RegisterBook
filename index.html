@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expense Tracker</title>
+
+        <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+
+        #container {
+            width: min(600px, 90%);
+            margin: 35px auto 20px;
+            padding: 25px;
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #inputText {
+            flex: 1;
+            min-width: 0;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 18px;
+            padding: 13px 16px;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        #inputText:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+        }
+
+        #searchButton {
+            border: none;
+            border-radius: 12px;
+            background: #4f46e5;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 13px 22px;
+            transition: 0.2s;
+        }
+
+        #searchButton:hover {
+            background: #4338ca;
+            transform: translateY(-1px);
+        }
+
+        #searchButton:active {
+            transform: translateY(0);
+        }
+
+        #warning {
+            margin-top: 30px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        #disclaimer {
+            margin-top: 35px;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+
+        /* ---------------- DETAILS ---------------- */
+
+        #details {
+            width: min(1000px, 92%);
+            margin: 10px auto 50px;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #name {
+            width: 100%;
+            margin: 10px 0 20px;
+            padding: 18px 22px;
+
+            background: white;
+            border-radius: 15px;
+
+            font-size: 21px;
+            text-align: left;
+
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            font-size: 18px;
+        }
+
+        th {
+            padding: 16px;
+            color: white;
+            background: #4f46e5;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eef0f4;
+            text-align: center;
+        }
+
+        tbody tr:hover {
+            background: #f8f9ff;
+        }
+        #cost {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        #installment {
+            color: #16a34a;
+            font-weight: 700;
+        }
+        #count {
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+
+            background: white;
+            border-radius: 15px;
+
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700;
+
+            color: #111827;
+
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+        }
+
+
+        /* ---------------- MOBILE ---------------- */
+
+        @media (max-width: 600px) {
+
+            #container {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            #inputText {
+                width: 100%;
+            }
+
+            #searchButton {
+                width: 100%;
+            }
+
+            #details {
+                width: 95%;
+            }
+
+            table {
+                font-size: 14px;
+            }
+
+            th,
+            td {
+                padding: 11px 8px;
+            }
+
+            #name {
+                font-size: 18px;
+            }
+
+            #count {
+                font-size: 19px;
+            }
+        }
+
+    </style>
+
+
+
+    <script>
+
+        function setupData(e){
+
+            let table = document.getElementById("myTable");
+            let row = table.insertRow();
+            let nameCell = row.insertCell();
+            let dateCell = row.insertCell();
+            let amountCell = row.insertCell();
+
+            amountCell.innerHTML = e.cost;
+            nameCell.innerHTML = e.purpose;
+            dateCell.innerHTML = e.date;
+            if (e.cost>0){
+                amountCell.id = "cost";
+                nameCell.id="cost";
+                dateCell.id="cost";
+            }
+            else if (e.cost<0){
+                amountCell.id="installment";
+                nameCell.id="installment";
+                dateCell.id="installment";
+            }
+            
+            return e.cost;
+        }
+
+        window.onload = function() {
+            document.getElementById("disclaimer").style.visibility="visible";
+            document.getElementById("container").style.visibility="hidden";
+            document.getElementById("warning").style.visibility="hidden";
+  
+            fetch("https://raw.githubusercontent.com/Deepayan2005/RegisterBook/main/data.txt")
+            .then(response =>response.text())
+            .then(data => {
+                response = JSON.parse(data)
+                document.getElementById("disclaimer").style.visibility="hidden";
+                document.getElementById("container").style.visibility="visible";
+            })
+            .catch(error => {
+                console.log("Error:", error);
+            });
+
+            document.getElementById("inputText").addEventListener("input",
+                function(){
+                    if (document.getElementById("inputText").value.length > 0) {
+                        document.getElementById("searchButton").style.visibility = "visible";
+                    } 
+                    else {
+                        document.getElementById("searchButton").style.visibility = "hidden";
+                    }
+                }
+            )
+
+            document.getElementById("searchButton").style.visibility="hidden";
+            document.getElementById("details").style.visibility = "hidden";
+
+
+        };
+
+        search  = function() {
+            var inputField = document.getElementById("inputText")
+
+            while (document.getElementById("myTable").rows.length > 1) {
+                document.getElementById("myTable").deleteRow(1);
+            }
+
+            keyId = inputField.value;
+            total = 0
+            let found = false;
+
+
+            for (let i = 0; i < response.data.length; i += 1) {
+                console.log(response.data.length);
+
+                if(keyId === response.data[i].id){
+                    found = true;
+                    document.getElementById("details").style.visibility = "visible";
+                    document.getElementById("warning").style.visibility="hidden";
+
+                    for(let e of response.data[i].bill){
+                        total += setupData(e);
+                    }
+
+                    document.getElementById("name").innerHTML = `<strong>Name = </strong>${response.data[i].name}`;                           
+                    let count = document.getElementById("count");
+                    count.innerHTML = "Remaining Balance = Rs "+total;
+                    count.style.fontWeight=800;
+                }
+                
+            }
+
+            if (found===false){
+                document.getElementById("warning").style.visibility="visible";
+                document.getElementById("details").style.visibility="hidden";
+            }
+            
+           
+        }
+        
+    </script>
+</head>
+
+<body>
+    <p id="warning">Data not found !!!</p>
+    <p id="disclaimer">Please, wait. Data is loading...</p>
+    <div id = "container">
+        <input placeholder="Put your ID here" id="inputText">
+        <button id="searchButton" onclick="search();">Search</button>
+    </div>
+    <div  id="details">
+        <p id="name"></p>
+        <table id="myTable">
+            <tr>
+                <th>Expense Name</th>
+                <th>Transaction Date</th>
+                <th>Amount</th>
+            </tr>
+        </table>
+        <p id="count"></p>
+    </div>
+    
+
+</body>
+</html>
