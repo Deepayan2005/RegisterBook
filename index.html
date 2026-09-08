@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Expense Tracker</title>
 
         <style>
@@ -11,7 +12,6 @@
 
         body {
             margin: 0;
-            min-height: 100vh;
             font-family: 'Segoe UI', Arial, sans-serif;
             background: #f4f7fb;
             color: #1f2937;
@@ -22,7 +22,7 @@
 
 
         #container {
-            width: min(600px, 90%);
+            width: 90%;
             margin: 35px auto 20px;
             padding: 25px;
             background: white;
@@ -87,13 +87,9 @@
             font-size: 16px;
         }
 
-
-        /* ---------------- DETAILS ---------------- */
-
         #details {
             width: min(1000px, 92%);
             margin: 10px auto 50px;
-
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -169,44 +165,44 @@
 
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
         }
+        #module_style{
 
+        }
+        #naming{
+            display: none;
+            color: black;
+        }
 
         /* ---------------- MOBILE ---------------- */
-
-        @media (max-width: 600px) {
-
+        @media screen and (max-width: 500px) {
             #container {
                 flex-direction: column;
-                padding: 20px;
+                align-items: stretch;
             }
-
-            #inputText {
+            table{
+                background: none;
+            }
+            tr{
+                display: flex;
+                flex-direction: column;
+            }
+            #headers{
+                display: none;
+            }
+            #module_style{
+                align-items: center;
+                display: flex;
+                flex-direction: column;
+                font-size: 20px;
+                border: 2px solid #b2ccff;
+                border-radius: 20px;
+                margin: 5px;
+            }
+            #naming {
+                text-decoration: underline;
+                display: block;
+                text-align: center;
                 width: 100%;
-            }
-
-            #searchButton {
-                width: 100%;
-            }
-
-            #details {
-                width: 95%;
-            }
-
-            table {
-                font-size: 14px;
-            }
-
-            th,
-            td {
-                padding: 11px 8px;
-            }
-
-            #name {
-                font-size: 18px;
-            }
-
-            #count {
-                font-size: 19px;
             }
         }
 
@@ -224,11 +220,17 @@
             let dateCell = row.insertCell();
             let amountCell = row.insertCell();
 
-            amountCell.innerHTML = e.cost;
-            nameCell.innerHTML = e.purpose;
-            dateCell.innerHTML = e.date;
+            row.id = "module_style";
+
+            amountCell.innerHTML = `<span id="naming">Amount</span>
+                <span>${e.cost}</span>`;
+            nameCell.innerHTML = `<span id="naming">Expense Name</span>
+                <span>${e.purpose}</span>`;
+            dateCell.innerHTML = `<span id="naming">Transaction Date</span>
+                <span>${e.date}</span>`;
+            
             if (e.cost>0){
-                amountCell.id = "cost";
+                amountCell.id="cost";
                 nameCell.id="cost";
                 dateCell.id="cost";
             }
@@ -237,7 +239,8 @@
                 nameCell.id="installment";
                 dateCell.id="installment";
             }
-            
+
+                
             return e.cost;
         }
 
@@ -270,8 +273,6 @@
 
             document.getElementById("searchButton").style.visibility="hidden";
             document.getElementById("details").style.visibility = "hidden";
-
-
         };
 
         search  = function() {
@@ -284,7 +285,6 @@
             keyId = inputField.value;
             total = 0
             let found = false;
-
 
             for (let i = 0; i < response.data.length; i += 1) {
                 console.log(response.data.length);
@@ -311,7 +311,6 @@
                 document.getElementById("details").style.visibility="hidden";
             }
             
-           
         }
         
     </script>
@@ -327,12 +326,13 @@
     <div  id="details">
         <p id="name"></p>
         <table id="myTable">
-            <tr>
+            <tr id="headers">
                 <th>Expense Name</th>
                 <th>Transaction Date</th>
                 <th>Amount</th>
             </tr>
         </table>
+        
         <p id="count"></p>
     </div>
     
