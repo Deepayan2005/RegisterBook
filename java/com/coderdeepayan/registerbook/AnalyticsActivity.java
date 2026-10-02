@@ -84,12 +84,8 @@ public class AnalyticsActivity extends AppCompatActivity {
 
     }
 
-    private String formatPercentage(double givenPercentage) {
-        String val = String.valueOf(givenPercentage).replace(".0","");
-        int i = val.indexOf(".");
-        if (i>0){
-            return val.substring(0,i+3);
-        }
-        return val;
+     private String formatPercentage(double givenPercentage) {
+        DecimalFormat decimalFormat = new DecimalFormat("###.###");
+        return decimalFormat.format(givenPercentage);
     }
 }
